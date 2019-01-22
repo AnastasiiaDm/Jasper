@@ -66,14 +66,13 @@ function isJson(body){
     body = JSON.stringify(body);
     try {
         JSON.parse(body);
-        console.log("\n", "\n", 'JSON true', body, "\n", "\n")
+        console.log("\n", "\n", 'JSON true: ', body, "\n", "\n")
         return true;
     } catch (e) {
-        console.log("\n", "\n",'JSON false', body, "\n", "\n")
+        console.log("\n", "\n",'invalid JSON: ', body, "\n", "\n")
         return false;
     }
 }
- 
 
 function getJson(){
     request({
