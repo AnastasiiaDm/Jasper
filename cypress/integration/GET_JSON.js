@@ -48,40 +48,41 @@ function ensureDirectoryExistence(filePath, body) {
         console.log(dirname)
       return true;
     }
-    ensureDirectoryExistence(dirname,);
+    ensureDirectoryExistence(dirname,null);
     console.log(dirname)
 
     fs.mkdirSync(dirname);
-
-    fs.writeFileSync(filePath, body, function(err) {
-        if(err) {
-            return console.log(err);
-        }
-        console.log("The file was saved!");
-    }); 
+    fs.writeFileSync(filePath, body);
   }
 
 function isJson(body){
     if (typeof body != 'string')
     body = JSON.stringify(body);
     try {
-        JSON.parse(body);
-        console.log("\n", "\n", 'JSON true: ', body, "\n", "\n")
-        return true;
+        JSON.parse(body)
+        if(body != '{"errors":{"base":"Oops! Unit not found."}}'){
+            console.log("\n", "\n", 'JSON true: ', body, "\n", "\n")
+            return true;
+        }
+        else{
+            console.log('Invalid Unit ID, error message: ', body)
+        }
     } catch (e) {
         console.log("\n", "\n",'invalid JSON: ', body, "\n", "\n")
         return false;
     }
 }
 
+
 function getJson(){
+    console.log('start');
     request({
         url: "https://jasper-staging.herokuapp.com/api/v1/accounts/login",
         method: "POST",
         json: true,   // <--Very important!!!
         body: authData
     }, function (error, response, body){
-        if (!error && response.statusCode == 201||200) {
+        if (error != null || response.statusCode == 201 || response.statusCode == 200) {
             console.log(body);
             jwt = body.jwt;
             console.log("token:", jwt);
