@@ -3,7 +3,7 @@ var request = require('request');
 var path = require('path'),
     fs = require('fs');
 
-    var dateFormat = require('dateformat');
+var dateFormat = require('dateformat');
 
 var authData = {
   "auth": {
@@ -15,15 +15,12 @@ var authData = {
 var jwt;
 
 function timeStamp() {
-
-       
     var day=dateFormat(new Date(), "yyyy-mm-dd h..MM..ss");  
     console.log(day)       
       return day;
-          
       }
 
-function getUnitsByID(id, timeInMs){
+function getUnitsByID(id, timeInMs, callback){
     request({
         url: "https://jasper-staging.herokuapp.com/api/v1/units/"+id,
         method: "GET",
@@ -34,12 +31,12 @@ function getUnitsByID(id, timeInMs){
     }, function (error, response, body){
         if (!error && response.statusCode == 201||200) {
             console.log("unit data:", "\n", body)
-            ensureDirectoryExistence('C:/Users/user/Downloads/JSON('+timeInMs+')/test.txt', JSON.stringify(body));
-
+            ensureDirectoryExistence('C:/Users/user/Downloads/JSON('+timeInMs+')/test.json', JSON.stringify(body));
+            callback(body);
         }
         else{
             console.log("unit data error", error);
-            ensureDirectoryExistence('C:/Users/user/Downloads/JSON/test.txt', JSON.stringify(error));
+            ensureDirectoryExistence('C:/Users/user/Downloads/JSON('+timeInMs+')/test.json', JSON.stringify(error));
         } 
     });
 }
@@ -60,13 +57,23 @@ function ensureDirectoryExistence(filePath, body) {
         if(err) {
             return console.log(err);
         }
-    
         console.log("The file was saved!");
     }); 
   }
 
-
-
+function isJson(body){
+    if (typeof body != 'string')
+    body = JSON.stringify(body);
+    try {
+        JSON.parse(body);
+        console.log("\n", "\n", 'JSON true', body, "\n", "\n")
+        return true;
+    } catch (e) {
+        console.log("\n", "\n",'JSON false', body, "\n", "\n")
+        return false;
+    }
+}
+ 
 
 function getJson(){
     request({
@@ -80,8 +87,9 @@ function getJson(){
             jwt = body.jwt;
             console.log("token:", jwt);
 
-            getUnitsByID(1, timeStamp());
-
+            getUnitsByID(1, timeStamp(), function (body) {
+                isJson(body);
+            });
         }
         else{
             console.log("auth failed", error);
@@ -90,5 +98,3 @@ function getJson(){
 }
 
 getJson();
-
-
