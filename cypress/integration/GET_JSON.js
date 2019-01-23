@@ -31,12 +31,12 @@ function getUnitsByID(id, timeInMs, callback){
     }, function (error, response, body){
         if (!error && response.statusCode == 201||200) {
             console.log("unit data:", "\n", body)
-            ensureDirectoryExistence('C:/Users/user/Downloads/JSON('+timeInMs+')/test.json', JSON.stringify(body));
+            ensureDirectoryExistence('C:/Users/user/Downloads/JSON('+timeInMs+')/ID_'+id+'.json', JSON.stringify(body));
             callback(body);
         }
         else{
             console.log("unit data error", error);
-            ensureDirectoryExistence('C:/Users/user/Downloads/JSON('+timeInMs+')/test.json', JSON.stringify(error));
+            ensureDirectoryExistence('C:/Users/user/Downloads/JSON('+timeInMs+')/ID_'+id+'.json', JSON.stringify(error));
         } 
     });
 }
@@ -60,12 +60,15 @@ function isJson(body){
     body = JSON.stringify(body);
     try {
         JSON.parse(body)
+        if (body == '{}'){
+                console.log("\n", "\n", 'JSON is empty: ', body, "\n", "\n")}
+                else
         if(body != '{"errors":{"base":"Oops! Unit not found."}}'){
             console.log("\n", "\n", 'JSON true: ', body, "\n", "\n")
             return true;
         }
         else{
-            console.log('Invalid Unit ID, error message: ', body)
+            console.log( "\n",'Invalid Unit ID, error message: ', "\n", body, "\n")
         }
     } catch (e) {
         console.log("\n", "\n",'invalid JSON: ', body, "\n", "\n")
