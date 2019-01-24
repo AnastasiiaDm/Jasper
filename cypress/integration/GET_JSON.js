@@ -33,6 +33,8 @@ function getUnitsByID(id, timeInMs, callback){
             console.log("unit data:", "\n", body)
             ensureDirectoryExistence('C:/Users/user/Downloads/JSON('+timeInMs+')/ID_'+id+'.json', JSON.stringify(body));
             callback(body);
+
+            
         }
         else{
             console.log("unit data error", error);
@@ -76,6 +78,65 @@ function isJson(body){
     }
 }
 
+function initialTrue(body){
+// обращение к объекту , проверка по всем его топиксам 
+    if(body.topics.length){
+        // перебор топиков
+        body.topics.forEach(function(topic){
+            // объявляется переменная, первоначально равная 0, необходима для подсчета количества айтемов в чаптере
+            var chapterCount = 0;
+            // если в топиках существуют чаптеры
+            if(topic.chapters.length){
+                //  в переменную chapterCount добаляет количеством чаптеров  
+                chapterCount += topic.chapters.length;
+                // перебор чаптеров
+                topic.chapters.forEach(function(chapter){
+                    // если в чаптерах есть сцены
+                    if(chapter.scenes.length){
+                        // каунтер для сцен с параметром initial : true
+                        var init = 0;
+                        // перебор сцен
+                        chapter.scenes.forEach(function(scene){
+                            // если значение initial true
+                            if(scene.initial == true){
+                                // инкрементиркем init если initial : true
+                                init++;
+                            }   
+                        });
+                        // если сцен с initial  true равно 1
+                        if(init == 1){
+                            // выводим в консоль все ок
+                            console.log('initial : true: ', init);
+                        }
+                        else{
+                            // вывод в консоль количество фолсов 
+                            console.log('initial : false', init);
+                        }
+                        if(scenes.interactions.length){
+                            var inter = 0;
+                            scenes.interactions.forEach(function(interaction){
+                                if(interaction.initial == true){
+                                    inter++;
+                                }
+                            });
+                            if(inter == 1){
+                                console.log('interactions initial:true', inter)
+                            }
+                            else{
+                                console.log('interactions initial:false', inter)
+                            }
+                        }
+                    }
+
+                });
+
+            }
+            // количество элементов в каждом чаптере
+            console.log("chapters:", chapterCount);
+        });
+    }
+}
+
 
 function getJson(){
     console.log('start');
@@ -90,8 +151,10 @@ function getJson(){
             jwt = body.jwt;
             console.log("token:", jwt);
 
-            getUnitsByID(1, timeStamp(), function (body) {
+            getUnitsByID(1, timeStamp(), 
+            function (body) {
                 isJson(body);
+                initialTrue(body);
             });
         }
         else{
