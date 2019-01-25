@@ -78,7 +78,7 @@ function isJson(body){
     }
 }
 
-function initialTrue(body){
+function sceneInitialTrue(body){
 // обращение к объекту , проверка по всем его топиксам 
     if(body.topics.length){
         // перебор топиков
@@ -106,26 +106,26 @@ function initialTrue(body){
                         // если сцен с initial  true равно 1
                         if(init == 1){
                             // выводим в консоль все ок
-                            console.log('initial : true: ', init);
+                            console.log('scene initial : true: ', init);
                         }
                         else{
                             // вывод в консоль количество фолсов 
-                            console.log('initial : false', init);
+                            console.log('scene initial : false', init);
                         }
-                        if(scenes.interactions.length){
-                            var inter = 0;
-                            scenes.interactions.forEach(function(interaction){
-                                if(interaction.initial == true){
-                                    inter++;
-                                }
-                            });
-                            if(inter == 1){
-                                console.log('interactions initial:true', inter)
-                            }
-                            else{
-                                console.log('interactions initial:false', inter)
-                            }
-                        }
+                        // if(scenes.interactions.length){
+                        //     var inter = 0;
+                        //     scenes.interactions.forEach(function(interaction){
+                        //         if(interaction.initial == true){
+                        //             inter++;
+                        //         }
+                        //     });
+                        //     if(inter == 1){
+                        //         console.log('interactions initial:true', inter);
+                        //     }
+                        //     else{
+                        //         console.log('interactions initial:false', inter);
+                        //     }
+                        // }
                     }
 
                 });
@@ -134,6 +134,38 @@ function initialTrue(body){
             // количество элементов в каждом чаптере
             console.log("chapters:", chapterCount);
         });
+    }
+}
+
+function interactionsInitialTrue(body){
+    if(body.topics.length){
+        body.topics.forEach(function(topic){
+            if(topic.chapters.length){
+                topic.chapters.forEach(function(chapter){
+                    var sceneCount = 0;
+                    if(chapter.scenes.length){
+                        sceneCount += chapter.scenes.length;
+                        chapter.scenes.forEach(function(scene){
+                            if(scene.interactions.length){
+                                var init = 0;
+                                scene.interactions.forEach(function(interaction){
+                                    if(interaction.initial == true){
+                                        init++;
+                                    }
+                                });
+                                if(init == 1){
+                                    console.log('interactions initial: true', init);
+                                }
+                                else{
+                                    console.log('interactions initial: false', init);
+                                }
+                            }
+                        });
+                        console.log('sceneCount:', sceneCount)
+                    }
+                })
+            }
+        }) 
     }
 }
 
@@ -154,7 +186,8 @@ function getJson(){
             getUnitsByID(1, timeStamp(), 
             function (body) {
                 isJson(body);
-                initialTrue(body);
+                sceneInitialTrue(body);
+                interactionsInitialTrue(body);
             });
         }
         else{
