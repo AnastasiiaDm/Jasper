@@ -169,6 +169,29 @@ function interactionsInitialTrue(body){
     }
 }
 
+function videID(body){
+    if(body.topics.length){
+        body.topics.forEach(function(topic){
+            if(topic.chapters.length){
+                topic.chapters.forEach(function(chapter){
+                    if(chapter.scenes.length){
+                        chapter.scenes.forEach(function(scene){
+                           var sceneVideoID = scene.video_id;
+                            console.log('sceneVideoID:', sceneVideoID);                        
+                        });
+                    }
+                })
+            }
+            if(topic.videos.length){
+                topic.videos.forEach(function(video){
+                    var topicVideoID = video.id
+                    console.log('topicVideoID', topicVideoID)
+                })
+            }
+        });
+    }
+}
+
 
 function getJson(){
     console.log('start');
@@ -188,6 +211,7 @@ function getJson(){
                 isJson(body);
                 sceneInitialTrue(body);
                 interactionsInitialTrue(body);
+                videID(body);
             });
         }
         else{
