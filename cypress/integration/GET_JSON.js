@@ -66,7 +66,10 @@ function isJson(body){
                 console.log("\n", "\n", 'JSON is empty: ', body, "\n", "\n")}
                 else
         if(body != '{"errors":{"base":"Oops! Unit not found."}}'){
-            console.log("\n", "\n", 'JSON true: ', body, "\n", "\n")
+            console.log("\n", "\n", 'JSON true: ', body, "\n", "\n");
+            // sceneInitialTrue(body);
+            //     interactionsInitialTrue(body);
+            //     videID(body);
             return true;
         }
         else{
@@ -112,28 +115,15 @@ function sceneInitialTrue(body){
                             // вывод в консоль количество фолсов 
                             console.log('scene initial : false', init);
                         }
-                        // if(scenes.interactions.length){
-                        //     var inter = 0;
-                        //     scenes.interactions.forEach(function(interaction){
-                        //         if(interaction.initial == true){
-                        //             inter++;
-                        //         }
-                        //     });
-                        //     if(inter == 1){
-                        //         console.log('interactions initial:true', inter);
-                        //     }
-                        //     else{
-                        //         console.log('interactions initial:false', inter);
-                        //     }
-                        // }
                     }
-
                 });
-
             }
             // количество элементов в каждом чаптере
             console.log("chapters:", chapterCount);
         });
+    }
+    else{
+        console.log('no Json')
     }
 }
 
@@ -177,24 +167,31 @@ function videID(body){
                     if(chapter.scenes.length){
                         chapter.scenes.forEach(function(scene){
                            var sceneVideoID = scene.video_id;
-                            console.log('sceneVideoID:', sceneVideoID);                        
+                            // console.log('sceneVideoID:', sceneVideoID);   
+                            if(topic.videos.length){
+
+                                var findedElement = topic.videos.find(function(video){
+                                    return video.id == sceneVideoID;
+                                });
+
+                                if (findedElement) 
+                                    console.log('result - true', ' | ', 'sceneVideoID - ', sceneVideoID, ' | ', 'video: ', findedElement.id);
+                                else 
+                                    console.log('false');
+                            }
                         });
+                        
                     }
+                   
                 })
             }
-            if(topic.videos.length){
-                topic.videos.forEach(function(video){
-                    var topicVideoID = video.id
-                    console.log('topicVideoID', topicVideoID)
-                })
-            }
-        });
-    }
+        })   
 }
+}
+        
 
 
 function getJson(){
-    console.log('start');
     request({
         url: "https://jasper-staging.herokuapp.com/api/v1/accounts/login",
         method: "POST",
